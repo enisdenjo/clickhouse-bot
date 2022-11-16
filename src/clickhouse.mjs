@@ -7,8 +7,6 @@ import { env } from './env.mjs';
  * @return {Promise<string>} The JWT access token acquired after logging it.
  */
 export async function login(username, password) {
-  console.debug('Logging in to ClickHouse', { username });
-
   const browser = await pptr.launch({
     headless: !env.isDev,
     devtools: env.isDev,
@@ -63,8 +61,6 @@ export async function login(username, password) {
  * @param {{ token: string, organizationId: string }} opts
  */
 export async function getInstances({ token, organizationId }) {
-  console.debug('Retrieving instances', { organizationId });
-
   /** @type {{ instances: Instance[] } | null} */
   const res = await request({
     endpoint: 'instance',
@@ -85,8 +81,6 @@ export async function getInstances({ token, organizationId }) {
  * @param {{ token: string, organizationId: string, instanceId: string }} opts
  */
 export async function getInstance({ token, organizationId, instanceId }) {
-  console.debug('Retrieving instance', { organizationId, instanceId });
-
   /** @type {{ instance: Instance } | null} */
   const res = await request({
     endpoint: 'instance',
@@ -113,11 +107,6 @@ export async function updateInstanceIpAccessList({
   instanceId,
   ipAccessList,
 }) {
-  console.debug('Updating instance ip access list', {
-    organizationId,
-    instanceId,
-  });
-
   await request({
     endpoint: 'instance',
     token,
@@ -134,8 +123,6 @@ export async function updateInstanceIpAccessList({
  * @param {{ token: string, organizationId: string, instanceId: string }} opts
  */
 export async function deleteInstance({ token, organizationId, instanceId }) {
-  console.debug('Deleting instance', { organizationId, instanceId });
-
   if (env.clickhouse.instanceId === instanceId) {
     // NEVER EVER DELETE ORIGINAL INSTANCE
     throw new Error('Deleting original instance is disallowed!');
@@ -156,8 +143,6 @@ export async function deleteInstance({ token, organizationId, instanceId }) {
  * @param {{ token: string, organizationId: string, instanceId: string }} opts
  */
 export async function getBackups({ token, organizationId, instanceId }) {
-  console.debug('Retrieving backups', { organizationId, instanceId });
-
   /** @type {{ backups: { id: string, createdAt: number }[] } | null} */
   const res = await request({
     endpoint: 'backup',
@@ -185,13 +170,6 @@ export async function restoreBackup({
   backupId,
   restoredInstanceName,
 }) {
-  console.debug('Restoring backup', {
-    organizationId,
-    instanceId,
-    backupId,
-    restoredInstanceName,
-  });
-
   /** @type {{ instanceId: string } | null} */
   const res = await request({
     endpoint: 'backup',

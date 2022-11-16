@@ -8,16 +8,15 @@ import {
 } from './clickhouse.mjs';
 
 (async () => {
-  const token = await login(
-    env.clickhouse.username || '',
-    env.clickhouse.password || '',
-  );
-
+  const username = env.clickhouse.username || '';
+  console.info('Logging into ClickHouse', { username });
+  const token = await login(username, env.clickhouse.password || '');
   console.debug('Access token acquired', { token });
 
   const organizationId = env.clickhouse.organizationId || '';
   const instanceId = env.clickhouse.instanceId || '';
 
+  console.info('Finding backup to restore');
   const backups = await getBackups({ token, organizationId, instanceId });
 
   // TODO: make sure we're using the latest backup
@@ -27,6 +26,7 @@ import {
     throw new Error('No backups found');
   }
 
+  console.info('Initiating backup restore', { backupId });
   const restoredInstanceId = await restoreBackup({
     token,
     organizationId,
@@ -43,14 +43,11 @@ import {
     instanceId: restoredInstanceId,
   });
 
-  console.debug('Waiting for restored instance to be provisioned...', {
-    organizationId,
-    instanceId,
-  });
-
-  let pings = 0;
+  console.info('Waiting for restored instance to be provisioned');
+  let checks = 0;
   while (restoredInstance.state === 'provisioning') {
-    if (pings >= 100) {
+    console.debug('Checking instance state');
+    if (checks >= 100) {
       throw new Error(
         `Instance ${restoredInstanceId} from ${organizationId} was never provisioned`,
       );
@@ -61,11 +58,12 @@ import {
       organizationId,
       instanceId: restoredInstanceId,
     });
-    pings++;
+    checks++;
   }
 
   // TODO: reset password, whitelist IP and test queries
 
+  console.info('Deleting restored instance');
   await deleteInstance({
     token,
     organizationId,
