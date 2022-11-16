@@ -65,9 +65,7 @@ export async function login(username, password) {
 export async function getInstances({ token, organizationId }) {
   console.debug('Retrieving instances', { organizationId });
 
-  /**
-   * @type {{ instances: Instance[] }}
-   */
+  /** @type {{ instances: Instance[] } | null} */
   const res = await request({
     endpoint: 'instance',
     token,
@@ -76,6 +74,9 @@ export async function getInstances({ token, organizationId }) {
       organizationId,
     },
   });
+  if (!res) {
+    throw new Error('Response containes no body');
+  }
 
   return res.instances;
 }
@@ -86,9 +87,7 @@ export async function getInstances({ token, organizationId }) {
 export async function getInstance({ token, organizationId, instanceId }) {
   console.debug('Retrieving instance', { organizationId, instanceId });
 
-  /**
-   * @type {{ instance: Instance }}
-   */
+  /** @type {{ instance: Instance } | null} */
   const res = await request({
     endpoint: 'instance',
     token,
@@ -98,6 +97,9 @@ export async function getInstance({ token, organizationId, instanceId }) {
       organizationId,
     },
   });
+  if (!res) {
+    throw new Error('Response containes no body');
+  }
 
   return res.instance;
 }
@@ -139,7 +141,6 @@ export async function deleteInstance({ token, organizationId, instanceId }) {
     throw new Error('Deleting original instance is disallowed!');
   }
 
-  /** @type {{ instanceId: string }} */
   await request({
     endpoint: 'instance',
     token,
@@ -157,7 +158,7 @@ export async function deleteInstance({ token, organizationId, instanceId }) {
 export async function getBackups({ token, organizationId, instanceId }) {
   console.debug('Retrieving backups', { organizationId, instanceId });
 
-  /** @type {{ backups: { id: string, createdAt: number }[] }} */
+  /** @type {{ backups: { id: string, createdAt: number }[] } | null} */
   const res = await request({
     endpoint: 'backup',
     token,
@@ -167,6 +168,9 @@ export async function getBackups({ token, organizationId, instanceId }) {
       instanceId,
     },
   });
+  if (!res) {
+    throw new Error('Response containes no body');
+  }
 
   return res.backups;
 }
@@ -188,7 +192,7 @@ export async function restoreBackup({
     restoredInstanceName,
   });
 
-  /** @type {{ instanceId: string }} */
+  /** @type {{ instanceId: string } | null} */
   const res = await request({
     endpoint: 'backup',
     token,
@@ -200,12 +204,17 @@ export async function restoreBackup({
       instanceName: restoredInstanceName,
     },
   });
+  if (!res) {
+    throw new Error('Response containes no body');
+  }
 
   return res.instanceId;
 }
 
 /**
+ * @template {Record<PropertyKey, any>} T
  * @param {{ endpoint: 'instance' | 'backup', token: string, body: Record<string, unknown> }} opts
+ * @return {Promise<T | null>}
  */
 async function request({ endpoint, token, body }) {
   const url = `https://clickhouse.cloud/api/${endpoint}`;
@@ -230,5 +239,10 @@ async function request({ endpoint, token, body }) {
   if (!res.headers.get('content-type')?.includes('application/json')) {
     throw new Error('Response content-type is not application/json');
   }
-  return res.json();
+  const resBody = await res.text();
+  if (!resBody) {
+    // sometimes CH replies with nothing
+    return null;
+  }
+  return JSON.parse(resBody);
 }
