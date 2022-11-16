@@ -47,13 +47,21 @@ import {
     organizationId,
     instanceId,
   });
+
+  let pings = 0;
   while (restoredInstance.state === 'provisioning') {
+    if (pings >= 100) {
+      throw new Error(
+        `Instance ${restoredInstanceId} from ${organizationId} was never provisioned`,
+      );
+    }
     await new Promise((resolve) => setTimeout(resolve, 3000));
     restoredInstance = await getInstance({
       token,
       organizationId,
       instanceId: restoredInstanceId,
     });
+    pings++;
   }
 
   // TODO: reset password, whitelist IP and test queries
