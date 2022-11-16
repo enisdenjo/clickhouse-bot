@@ -1,4 +1,18 @@
 {
   "name": "clickhouse-bot",
-  "packageManager": "yarn@3.3.0"
+  "packageManager": "yarn@3.3.0",
+  "type": "module",
+  "main": "src/index.mjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "lint": "prettier -c .",
+    "start": "node ."
+  },
+  "devDependencies": {
+    "prettier": "^2.7.1",
+    "typescript": "^4.9.3"
+  }
 }
