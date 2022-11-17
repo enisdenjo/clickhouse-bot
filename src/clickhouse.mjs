@@ -122,6 +122,36 @@ export async function updateInstanceIpAccessList({
 /**
  * @param {{ token: string, organizationId: string, instanceId: string }} opts
  */
+export async function restoreInstancePassword({
+  token,
+  organizationId,
+  instanceId,
+}) {
+  if (env.clickhouse.instanceId === instanceId) {
+    // NEVER EVER RESTORE ORIGINAL INSTANCE PASSWORD
+    throw new Error('Resetting original instance password is disallowed!');
+  }
+
+  /** @type {{ password: string } | null} */
+  const res = await request({
+    endpoint: 'instance',
+    token,
+    body: {
+      rpcAction: 'resetPassword',
+      organizationId,
+      instanceId,
+    },
+  });
+  if (!res) {
+    throw new Error('Response containes no body');
+  }
+
+  return res.password;
+}
+
+/**
+ * @param {{ token: string, organizationId: string, instanceId: string }} opts
+ */
 export async function deleteInstance({ token, organizationId, instanceId }) {
   if (env.clickhouse.instanceId === instanceId) {
     // NEVER EVER DELETE ORIGINAL INSTANCE
