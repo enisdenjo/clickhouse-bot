@@ -1,6 +1,7 @@
 **/.DS_Store
 node_modules
 .vscode
+.editorconfig
 .yarn/*
 !.yarn/releases
 !.yarn/plugins
