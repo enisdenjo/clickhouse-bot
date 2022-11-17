@@ -69,7 +69,7 @@ import {
   await updateInstanceIpAccessList({
     token,
     organizationId,
-    instanceId,
+    instanceId: restoredInstanceId,
     ipAccessList: [
       ...restoredInstance.ipAccessList,
       { source: ip, description: ipDescription },
