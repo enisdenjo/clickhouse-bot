@@ -49,7 +49,7 @@ import {
   let checks = 0;
   while (restoredInstance.state === 'provisioning') {
     console.debug('Checking instance state');
-    if (checks >= 100) {
+    if (checks >= 132) {
       throw new Error(
         `Instance ${restoredInstanceId} from ${organizationId} was never provisioned`,
       );
