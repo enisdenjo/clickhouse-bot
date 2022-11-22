@@ -6,7 +6,7 @@ import { env, isDebug } from './env.mjs';
  * @param {string} password
  * @return {Promise<string>} The JWT access token acquired after logging it.
  */
-export async function login(username, password) {
+export async function getToken(username, password) {
   const browser = await pptr.launch({
     headless: !isDebug(),
     devtools: isDebug(),
