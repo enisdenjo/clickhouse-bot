@@ -1,13 +1,19 @@
 {
-  "private": true,
   "name": "clickhouse-bot",
+  "version": "0.0.0",
+  "engines": {
+    "node": ">=18"
+  },
   "packageManager": "yarn@3.3.0",
   "type": "module",
   "main": "src/index.mjs",
   "bin": "./bin.cjs",
-  "engines": {
-    "node": ">=18"
-  },
+  "files": [
+    "src",
+    "bin.cjs",
+    "LICENSE.md",
+    "README.md"
+  ],
   "scripts": {
     "type-check": "tsc --noEmit",
     "lint": "prettier -c .",
