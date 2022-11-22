@@ -1,7 +1,7 @@
-import { env } from './env.mjs';
+import { env, isDebug } from './env.mjs';
 import * as cmds from './cmds.mjs';
 
-if (env.DEBUG !== '1' && env.DEBUG !== 'true') {
+if (isDebug()) {
   console.debug = () => {
     // noop
   };

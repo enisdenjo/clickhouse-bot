@@ -1,5 +1,5 @@
 import pptr from 'puppeteer';
-import { env } from './env.mjs';
+import { env, isDebug } from './env.mjs';
 
 /**
  * @param {string} username
@@ -7,10 +7,9 @@ import { env } from './env.mjs';
  * @return {Promise<string>} The JWT access token acquired after logging it.
  */
 export async function login(username, password) {
-  const isDev = env.NODE_ENV !== 'production';
   const browser = await pptr.launch({
-    headless: !isDev,
-    devtools: isDev,
+    headless: !isDebug(),
+    devtools: isDebug(),
   });
   const page = await browser.newPage();
 

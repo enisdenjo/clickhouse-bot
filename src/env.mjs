@@ -5,3 +5,7 @@ export const env = {
   CLICKHOUSE_ORGANIZATION_ID: process.env.CLICKHOUSE_ORGANIZATION_ID,
   CLICKHOUSE_INSTANCE_ID: process.env.CLICKHOUSE_INSTANCE_ID,
 };
+
+export function isDebug() {
+  return env.DEBUG === '1' || env.DEBUG === 'true' || env.DEBUG === 't';
+}

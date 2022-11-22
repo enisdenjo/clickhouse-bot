@@ -1,4 +1,4 @@
-import { executeTestQueries } from './clickhouse.mjs';
+import { executeTestQueries, login } from './clickhouse.mjs';
 
 /**
  * @param {string} url
@@ -51,4 +51,12 @@ export async function compareTestQueries(
   }
 
   return 'Ok';
+}
+
+/**
+ * @param {string} username
+ * @param {string} password
+ */
+export async function getAccessToken(username, password) {
+  return await login(username, password);
 }
