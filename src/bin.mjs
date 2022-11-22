@@ -39,6 +39,7 @@ if (!(arg0 in cmds)) {
       }`,
     );
   }
+  console.log();
 
   process.exit(1);
 }
