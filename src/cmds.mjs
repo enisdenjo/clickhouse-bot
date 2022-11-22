@@ -105,7 +105,9 @@ export async function createInstanceFromLatestBackup(
     return restoredInstance;
   }
 
-  console.debug('Waiting for restored instance to be provisioned');
+  console.debug('Waiting for restored instance to be provisioned', {
+    restoredInstance,
+  });
   let checks = 0;
   while (restoredInstance.state === 'provisioning') {
     console.debug('Checking instance state');
