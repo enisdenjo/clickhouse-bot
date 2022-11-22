@@ -1,6 +1,12 @@
 import { env } from './env.mjs';
 import * as cmds from './cmds.mjs';
 
+if (env.DEBUG !== '1' && env.DEBUG !== 'true') {
+  console.debug = () => {
+    // noop
+  };
+}
+
 const [, , arg0, ...args] = process.argv;
 if (!(arg0 in cmds)) {
   if (arg0 !== '' && arg0 !== 'help') {
@@ -40,7 +46,9 @@ if (!(arg0 in cmds)) {
 (async () => {
   // @ts-expect-error
   const res = await cmds[arg0](...args);
-  console.log(JSON.stringify(res, undefined, ' '));
+  console.log(
+    typeof res === 'object' ? JSON.stringify(res, undefined, ' ') : String(res),
+  );
 })().catch((err) => {
   console.error(err);
   process.exit(1);

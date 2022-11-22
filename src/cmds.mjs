@@ -25,7 +25,7 @@ export async function compareTestQueries(
   username1,
   password1,
 ) {
-  console.log('Comparing test queries between two databases', { url0, url1 });
+  console.debug('Comparing test queries between two databases', { url0, url1 });
 
   const [res0, res1] = await Promise.all([
     executeTestQueries({
