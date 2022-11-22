@@ -46,9 +46,13 @@ if (!(arg0 in cmds)) {
 (async () => {
   // @ts-expect-error
   const res = await cmds[arg0](...args);
-  console.log(
-    typeof res === 'object' ? JSON.stringify(res, undefined, ' ') : String(res),
-  );
+  if (res != null) {
+    console.log(
+      typeof res === 'object'
+        ? JSON.stringify(res, undefined, ' ')
+        : String(res),
+    );
+  }
 })().catch((err) => {
   console.error(err);
   process.exit(1);
