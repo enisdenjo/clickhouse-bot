@@ -1,5 +1,5 @@
 import pptr from 'puppeteer';
-import { env, isDebug } from './env.mjs';
+import { isDebug } from './env.mjs';
 
 /**
  * @param {string} username
@@ -127,11 +127,6 @@ export async function restoreInstancePassword({
   organizationId,
   instanceId,
 }) {
-  if (env.CLICKHOUSE_INSTANCE_ID === instanceId) {
-    // NEVER EVER RESTORE ORIGINAL INSTANCE PASSWORD
-    throw new Error('Resetting original instance password is disallowed!');
-  }
-
   /** @type {{ password: string } | null} */
   const res = await request({
     endpoint: 'instance',
@@ -153,11 +148,6 @@ export async function restoreInstancePassword({
  * @param {{ token: string, organizationId: string, instanceId: string }} opts
  */
 export async function deleteInstance({ token, organizationId, instanceId }) {
-  if (env.CLICKHOUSE_INSTANCE_ID === instanceId) {
-    // NEVER EVER DELETE ORIGINAL INSTANCE
-    throw new Error('Deleting original instance is disallowed!');
-  }
-
   await request({
     endpoint: 'instance',
     token,
