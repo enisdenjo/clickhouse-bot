@@ -7,9 +7,10 @@ import { env } from './env.mjs';
  * @return {Promise<string>} The JWT access token acquired after logging it.
  */
 export async function login(username, password) {
+  const isDev = env.NODE_ENV !== 'production';
   const browser = await pptr.launch({
-    headless: !env.isDev,
-    devtools: env.isDev,
+    headless: !isDev,
+    devtools: isDev,
   });
   const page = await browser.newPage();
 
@@ -127,7 +128,7 @@ export async function restoreInstancePassword({
   organizationId,
   instanceId,
 }) {
-  if (env.clickhouse.instanceId === instanceId) {
+  if (env.CLICKHOUSE_INSTANCE_ID === instanceId) {
     // NEVER EVER RESTORE ORIGINAL INSTANCE PASSWORD
     throw new Error('Resetting original instance password is disallowed!');
   }
@@ -153,7 +154,7 @@ export async function restoreInstancePassword({
  * @param {{ token: string, organizationId: string, instanceId: string }} opts
  */
 export async function deleteInstance({ token, organizationId, instanceId }) {
-  if (env.clickhouse.instanceId === instanceId) {
+  if (env.CLICKHOUSE_INSTANCE_ID === instanceId) {
     // NEVER EVER DELETE ORIGINAL INSTANCE
     throw new Error('Deleting original instance is disallowed!');
   }
@@ -253,4 +254,34 @@ async function request({ endpoint, token, body }) {
     return null;
   }
   return JSON.parse(resBody);
+}
+
+/**
+ *
+ * @param {{ url: string, username: string, password: string, query: string }} param0
+ * @returns {Promise<string>}
+ */
+export async function query({ url, username, password, query }) {
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      authorization:
+        'Basic ' + Buffer.from(`${username}:${password}`).toString('base64'),
+      'content-type': 'text/plain',
+    },
+    body: query,
+  });
+
+  if (!res.ok) {
+    console.debug('Query failed', {
+      url,
+      body: query,
+      status: res.status,
+      statusText: res.statusText,
+      response: await res.text(),
+    });
+    throw new Error(`Query failed with ${res.status}: ${res.statusText}`);
+  }
+
+  return (await res.text()).trim();
 }

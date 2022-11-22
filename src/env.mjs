@@ -1,9 +1,7 @@
 export const env = {
-  isDev: process.env.NODE_ENV !== 'production',
-  clickhouse: {
-    username: process.env.CLICKHOUSE_USERNAME,
-    password: process.env.CLICKHOUSE_PASSWORD,
-    organizationId: process.env.CLICKHOUSE_ORGANIZATION_ID,
-    instanceId: process.env.CLICKHOUSE_INSTANCE_ID,
-  },
+  NODE_ENV: process.env.NODE_ENV,
+  CLICKHOUSE_USERNAME: process.env.CLICKHOUSE_USERNAME,
+  CLICKHOUSE_PASSWORD: process.env.CLICKHOUSE_PASSWORD,
+  CLICKHOUSE_ORGANIZATION_ID: process.env.CLICKHOUSE_ORGANIZATION_ID,
+  CLICKHOUSE_INSTANCE_ID: process.env.CLICKHOUSE_INSTANCE_ID,
 };

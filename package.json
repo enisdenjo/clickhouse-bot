@@ -4,13 +4,16 @@
   "packageManager": "yarn@3.3.0",
   "type": "module",
   "main": "src/index.mjs",
+  "bin": {
+    "clickhouse-bot": "src/bin.mjs"
+  },
   "engines": {
     "node": ">=18"
   },
   "scripts": {
     "type-check": "tsc --noEmit",
     "lint": "prettier -c .",
-    "start": "node ."
+    "start": "node src/bin.mjs"
   },
   "devDependencies": {
     "prettier": "^2.7.1",
