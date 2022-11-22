@@ -1,5 +1,5 @@
 import { env, isDebug } from './env.mjs';
-import * as cmds from './cmds.mjs';
+import * as cmds from './commands.mjs';
 
 if (!isDebug()) {
   console.debug = () => {
