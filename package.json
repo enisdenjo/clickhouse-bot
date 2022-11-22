@@ -4,9 +4,7 @@
   "packageManager": "yarn@3.3.0",
   "type": "module",
   "main": "src/index.mjs",
-  "bin": {
-    "clickhouse-bot": "src/bin.mjs"
-  },
+  "bin": "./src/bin.mjs",
   "engines": {
     "node": ">=18"
   },
