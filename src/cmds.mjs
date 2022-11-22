@@ -156,6 +156,29 @@ export async function whitelistMyIpInInstance(
  * @param {string} organizationId
  * @param {string} instanceId
  */
+export async function removeMyIpFromWhitelistInInstance(
+  token,
+  organizationId,
+  instanceId,
+) {
+  const ip = await getRemoteIp();
+  console.debug('Removing IP from whitelist', { ip });
+
+  const instance = await ch.getInstance({ token, organizationId, instanceId });
+
+  await ch.updateInstanceIpAccessList({
+    token,
+    organizationId,
+    instanceId,
+    ipAccessList: instance.ipAccessList.filter(({ source }) => source !== ip),
+  });
+}
+
+/**
+ * @param {string} token
+ * @param {string} organizationId
+ * @param {string} instanceId
+ */
 export async function resetInstancePassword(token, organizationId, instanceId) {
   console.debug('Resetting instance password');
   return await ch.restoreInstancePassword({
