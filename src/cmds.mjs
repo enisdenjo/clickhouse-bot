@@ -1,4 +1,4 @@
-import { query } from './clickhouse.mjs';
+import { executeTestQueries } from './clickhouse.mjs';
 
 /**
  * @param {string} url
@@ -6,86 +6,49 @@ import { query } from './clickhouse.mjs';
  * @param {string} password
  */
 export async function runTestQueries(url, username, password) {
-  const ctx = { url, username, password };
+  return await executeTestQueries({ url, username, password });
+}
 
-  const operationCollection = await query({
-    ...ctx,
-    query: `
-      SELECT sum(total) as total
-      FROM operation_collection
-      WHERE
-        timestamp > subtractDays(toStartOfDay(yesterday()), 14)
-        AND
-        timestamp < toStartOfDay(yesterday())
-    `,
-  });
+/**
+ * @param {string} url0
+ * @param {string} username0
+ * @param {string} password0
+ * @param {string} url1
+ * @param {string} username1
+ * @param {string} password1
+ */
+export async function compareTestQueries(
+  url0,
+  username0,
+  password0,
+  url1,
+  username1,
+  password1,
+) {
+  console.log('Comparing test queries between two databases', { url0, url1 });
 
-  const operations = await query({
-    ...ctx,
-    query: `
-      SELECT count() as total
-      FROM operations
-      WHERE
-        timestamp > subtractDays(toStartOfDay(yesterday()), 14)
-        AND
-        timestamp < toStartOfDay(yesterday())
-    `,
-  });
+  const [res0, res1] = await Promise.all([
+    executeTestQueries({
+      url: url0,
+      username: username0,
+      password: password0,
+    }),
+    executeTestQueries({
+      url: url1,
+      username: username1,
+      password: password1,
+    }),
+  ]);
 
-  const operationsHourly = await query({
-    ...ctx,
-    query: `
-      SELECT sum(total) as total
-      FROM operations_hourly
-      WHERE
-        timestamp > subtractDays(toStartOfDay(yesterday()), 14)
-        AND
-        timestamp < toStartOfDay(yesterday())
-    `,
-  });
+  for (const [key, val0] of Object.entries(res0)) {
+    // @ts-expect-error
+    const val1 = res1[key];
+    if (val0 !== val1) {
+      throw new Error(
+        `Value for "${key}" is not the same, url0 "${val0}" vs url1 "${val1}"`,
+      );
+    }
+  }
 
-  const operationsDaily = await query({
-    ...ctx,
-    query: `
-      SELECT sum(total) as total
-      FROM operations_daily
-      WHERE
-        timestamp > subtractDays(toStartOfDay(yesterday()), 14)
-        AND
-        timestamp < toStartOfDay(yesterday())
-    `,
-  });
-
-  const coordinatesDaily = await query({
-    ...ctx,
-    query: `
-      SELECT sum(total) as total
-      FROM coordinates_daily
-      WHERE
-        timestamp > subtractDays(toStartOfDay(yesterday()), 14)
-        AND
-        timestamp < toStartOfDay(yesterday())
-    `,
-  });
-
-  const clientsDaily = await query({
-    ...ctx,
-    query: `
-      SELECT sum(total) as total
-      FROM clients_daily
-      WHERE
-        timestamp > subtractDays(toStartOfDay(yesterday()), 14)
-        AND
-        timestamp < toStartOfDay(yesterday())
-    `,
-  });
-
-  return {
-    operationCollection,
-    operations,
-    operationsHourly,
-    operationsDaily,
-    coordinatesDaily,
-    clientsDaily,
-  };
+  return 'Ok';
 }
