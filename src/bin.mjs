@@ -9,7 +9,7 @@ if (!isDebug()) {
 
 const [, , arg0, ...args] = process.argv;
 if (!(arg0 in cmds)) {
-  if (arg0 !== '' && arg0 !== 'help') {
+  if (arg0 && arg0 !== 'help') {
     console.log(`Unrecognized command "${arg0}"`);
     console.log();
   }
