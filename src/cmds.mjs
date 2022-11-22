@@ -1,3 +1,4 @@
+import os from 'os';
 import * as ch from './clickhouse.mjs';
 
 /**
@@ -131,6 +132,30 @@ export async function createInstanceFromLatestBackup(
  * @param {string} organizationId
  * @param {string} instanceId
  */
+export async function whitelistMyIpInInstance(
+  token,
+  organizationId,
+  instanceId,
+) {
+  const ip = await getRemoteIp();
+  const description = `[clickhouse-bot] ${os.hostname()}`;
+  console.debug('Whitelisting IP', { ip, description });
+
+  const instance = await ch.getInstance({ token, organizationId, instanceId });
+
+  await ch.updateInstanceIpAccessList({
+    token,
+    organizationId,
+    instanceId,
+    ipAccessList: [...instance.ipAccessList, { source: ip, description }],
+  });
+}
+
+/**
+ * @param {string} token
+ * @param {string} organizationId
+ * @param {string} instanceId
+ */
 export async function resetInstancePassword(token, organizationId, instanceId) {
   console.debug('Resetting instance password');
   return await ch.restoreInstancePassword({
@@ -138,4 +163,14 @@ export async function resetInstancePassword(token, organizationId, instanceId) {
     organizationId,
     instanceId,
   });
+}
+
+async function getRemoteIp() {
+  const res = await fetch('http://ifconfig.me/ip');
+  if (!res.ok) {
+    throw new Error(
+      `Remote IP request failed with ${res.status}: ${res.statusText}`,
+    );
+  }
+  return res.text();
 }
