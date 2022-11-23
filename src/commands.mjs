@@ -1,16 +1,22 @@
 import os from 'os';
+import YAML from 'yaml';
+import fsp from 'fs/promises';
 import * as ch from './clickhouse.mjs';
 
 /**
+ * @param {string} queriesFile
  * @param {string} url
  * @param {string} username
  * @param {string} password
  */
-export async function runTestQueries(url, username, password) {
-  return await ch.executeTestQueries({ url, username, password });
+export async function runTestQueries(queriesFile, url, username, password) {
+  const queries = await parseFile(queriesFile);
+  console.debug('Running test queries', { queries });
+  return await ch.execQueries({ queries, url, username, password });
 }
 
 /**
+ * @param {string} queriesFile
  * @param {string} url0
  * @param {string} username0
  * @param {string} password0
@@ -19,6 +25,7 @@ export async function runTestQueries(url, username, password) {
  * @param {string} password1
  */
 export async function compareTestQueries(
+  queriesFile,
   url0,
   username0,
   password0,
@@ -28,21 +35,24 @@ export async function compareTestQueries(
 ) {
   console.debug('Comparing test queries between two databases', { url0, url1 });
 
+  const queries = await parseFile(queriesFile);
+
   const [res0, res1] = await Promise.all([
-    ch.executeTestQueries({
+    ch.execQueries({
       url: url0,
       username: username0,
       password: password0,
+      queries,
     }),
-    ch.executeTestQueries({
+    ch.execQueries({
       url: url1,
       username: username1,
       password: password1,
+      queries,
     }),
   ]);
 
   for (const [key, val0] of Object.entries(res0)) {
-    // @ts-expect-error
     const val1 = res1[key];
     if (val0 !== val1) {
       throw new Error(
@@ -212,4 +222,20 @@ async function getRemoteIp() {
     );
   }
   return res.text();
+}
+
+/**
+ * @param {string} path
+ * @returns {Promise<Record<string, string>>}
+ */
+async function parseFile(path) {
+  if (path.endsWith('.yaml') || path.endsWith('.yml')) {
+    const content = await fsp.readFile(path);
+    return YAML.parse(content.toString());
+  } else if (path.endsWith('.json')) {
+    const content = await fsp.readFile(path);
+    return JSON.parse(content.toString());
+  } else {
+    throw new Error('Unsupported file, try YAML or JSON');
+  }
 }

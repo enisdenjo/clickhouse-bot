@@ -220,92 +220,28 @@ export async function restoreBackup({
 }
 
 /**
- * @param {{ url: string, username: string, password: string }} opts
+ * Executes the provided queries on the server.
+ *
+ * The queries are expected to be `{ "name": "query" }`.
+ *
+ * @param {{
+ *   url: string
+ *   username: string
+ *   password: string
+ *   queries: Record<string, string>
+ * }} opts
+ * @returns {Promise<Record<string, string>>}
  */
-export async function executeTestQueries(opts) {
-  const [
-    operationCollection,
-    operations,
-    operationsHourly,
-    operationsDaily,
-    coordinatesDaily,
-    clientsDaily,
-  ] = await Promise.all([
-    query({
-      ...opts,
-      query: `
-        SELECT sum(total) as total
-        FROM operation_collection
-        WHERE
-          timestamp > subtractDays(toStartOfDay(yesterday()), 14)
-          AND
-          timestamp < toStartOfDay(yesterday())
-      `,
-    }),
-    query({
-      ...opts,
-      query: `
-        SELECT count() as total
-        FROM operations
-        WHERE
-          timestamp > subtractDays(toStartOfDay(yesterday()), 14)
-          AND
-          timestamp < toStartOfDay(yesterday())
-      `,
-    }),
-    query({
-      ...opts,
-      query: `
-        SELECT sum(total) as total
-        FROM operations_hourly
-        WHERE
-          timestamp > toStartOfDay(subtractDays(yesterday(), 14))
-          AND
-          timestamp < toStartOfDay(yesterday())
-      `,
-    }),
-    query({
-      ...opts,
-      query: `
-        SELECT sum(total) as total
-        FROM operations_daily
-        WHERE
-          timestamp > subtractDays(toStartOfDay(yesterday()), 14)
-          AND
-          timestamp < toStartOfDay(yesterday())
-      `,
-    }),
-    query({
-      ...opts,
-      query: `
-        SELECT sum(total) as total
-        FROM coordinates_daily
-        WHERE
-          timestamp > subtractDays(toStartOfDay(yesterday()), 14)
-          AND
-          timestamp < toStartOfDay(yesterday())
-      `,
-    }),
-    query({
-      ...opts,
-      query: `
-        SELECT sum(total) as total
-        FROM clients_daily
-        WHERE
-          timestamp > subtractDays(toStartOfDay(yesterday()), 14)
-          AND
-          timestamp < toStartOfDay(yesterday())
-      `,
-    }),
-  ]);
-  return {
-    operationCollection,
-    operations,
-    operationsHourly,
-    operationsDaily,
-    coordinatesDaily,
-    clientsDaily,
-  };
+export async function execQueries({ queries, ...opts }) {
+  const execdQueries = await Promise.all(
+    Object.values(queries).map((query) => execQuery({ ...opts, query })),
+  );
+  return Object.keys(queries).reduce((acc, name, index) => {
+    return {
+      ...acc,
+      [name]: execdQueries[index],
+    };
+  }, {});
 }
 
 /**
@@ -349,7 +285,7 @@ async function request({ endpoint, token, body }) {
  * @param {{ url: string, username: string, password: string, query: string }} param0
  * @returns {Promise<string>}
  */
-async function query({ url, username, password, query }) {
+async function execQuery({ url, username, password, query }) {
   const res = await fetch(url, {
     method: 'POST',
     headers: {
