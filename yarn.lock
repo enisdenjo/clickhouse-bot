@@ -173,7 +173,7 @@ __metadata:
     puppeteer: ^19.2.2
     typescript: ^4.9.3
   bin:
-    clickhouse-bot: ./src/bin.mjs
+    clickhouse-bot: ./bin.cjs
   languageName: unknown
   linkType: soft
 

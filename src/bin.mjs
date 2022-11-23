@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { env, isDebug } from './env.mjs';
 import * as cmds from './commands.mjs';
 
