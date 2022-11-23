@@ -86,17 +86,10 @@ export async function waitForInstanceProvisioned(
 
   let instance = await ch.getInstance({ token, organizationId, instanceId });
 
-  let checks = 0;
   while (instance.state === 'provisioning') {
-    console.debug('Checking instance state');
-    if (checks >= 132) {
-      throw new Error(
-        `Instance ${instanceId} from ${organizationId} was never provisioned`,
-      );
-    }
     await new Promise((resolve) => setTimeout(resolve, 3000));
+    console.debug('Checking instance state');
     instance = await ch.getInstance({ token, organizationId, instanceId });
-    checks++;
   }
 }
 /**
