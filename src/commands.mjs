@@ -76,16 +76,39 @@ export async function getToken(username, password) {
  * @param {string} token
  * @param {string} organizationId
  * @param {string} instanceId
- * @param {string=} waitForProvisioned
+ */
+export async function waitForInstanceProvisioned(
+  token,
+  organizationId,
+  instanceId,
+) {
+  console.debug('Waiting for instance to be provisioned');
+
+  let instance = await ch.getInstance({ token, organizationId, instanceId });
+
+  let checks = 0;
+  while (instance.state === 'provisioning') {
+    console.debug('Checking instance state');
+    if (checks >= 132) {
+      throw new Error(
+        `Instance ${instanceId} from ${organizationId} was never provisioned`,
+      );
+    }
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    instance = await ch.getInstance({ token, organizationId, instanceId });
+    checks++;
+  }
+}
+/**
+ * @param {string} token
+ * @param {string} organizationId
+ * @param {string} instanceId
  */
 export async function createInstanceFromLatestBackup(
   token,
   organizationId,
   instanceId,
-  waitForProvisioned,
 ) {
-  const shouldWaitForProvisioned = isTrue(waitForProvisioned);
-
   console.debug('Finding backup to restore');
   const backups = await ch.getBackups({ token, organizationId, instanceId });
 
@@ -96,7 +119,7 @@ export async function createInstanceFromLatestBackup(
     throw new Error('No backups found');
   }
 
-  console.debug('Initiating backup restore', { backupId });
+  console.debug('Restoring backup', { backupId });
   const restoredInstanceId = await ch.restoreBackup({
     token,
     organizationId,
@@ -107,36 +130,11 @@ export async function createInstanceFromLatestBackup(
     )})`,
   });
 
-  let restoredInstance = await ch.getInstance({
+  return await ch.getInstance({
     token,
     organizationId,
     instanceId: restoredInstanceId,
   });
-
-  if (!shouldWaitForProvisioned) {
-    console.debug('Skip waiting for restored instance to be provisioned');
-    return restoredInstance;
-  }
-
-  console.debug('Waiting for restored instance to be provisioned', {
-    restoredInstance,
-  });
-  let checks = 0;
-  while (restoredInstance.state === 'provisioning') {
-    console.debug('Checking instance state');
-    if (checks >= 132) {
-      throw new Error(
-        `Instance ${restoredInstanceId} from ${organizationId} was never provisioned`,
-      );
-    }
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    restoredInstance = await ch.getInstance({
-      token,
-      organizationId,
-      instanceId: restoredInstanceId,
-    });
-    checks++;
-  }
 }
 
 /**
