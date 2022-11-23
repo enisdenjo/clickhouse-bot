@@ -56,6 +56,15 @@ export async function compareTestQueries(
 }
 
 /**
+ * @param {string} token
+ * @param {string} organizationId
+ * @param {string} instanceId
+ */
+export async function getInstance(token, organizationId, instanceId) {
+  return await ch.getInstance({ token, organizationId, instanceId });
+}
+
+/**
  * @param {string} username
  * @param {string} password
  */
