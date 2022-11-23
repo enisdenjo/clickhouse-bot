@@ -259,7 +259,7 @@ export async function executeTestQueries(opts) {
         SELECT sum(total) as total
         FROM operations_hourly
         WHERE
-          timestamp > subtractDays(toStartOfDay(yesterday()), 14)
+          timestamp > toStartOfDay(subtractDays(yesterday(), 14))
           AND
           timestamp < toStartOfDay(yesterday())
       `,
