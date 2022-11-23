@@ -1,5 +1,5 @@
 import pptr from 'puppeteer';
-import { isDebug } from './env.mjs';
+import { env, isDebug } from './env.mjs';
 
 /**
  * @param {string} username
@@ -127,6 +127,11 @@ export async function restoreInstancePassword({
   organizationId,
   instanceId,
 }) {
+  if (env.CLICKHOUSE_PROTECTED_INSTANCE_ID === instanceId) {
+    throw new Error(
+      `Cannot reset password on protected instance ${env.CLICKHOUSE_PROTECTED_INSTANCE_ID}`,
+    );
+  }
   /** @type {{ password: string } | null} */
   const res = await request({
     endpoint: 'instance',
@@ -148,6 +153,11 @@ export async function restoreInstancePassword({
  * @param {{ token: string, organizationId: string, instanceId: string }} opts
  */
 export async function deleteInstance({ token, organizationId, instanceId }) {
+  if (env.CLICKHOUSE_PROTECTED_INSTANCE_ID === instanceId) {
+    throw new Error(
+      `Cannot delete protected instance ${env.CLICKHOUSE_PROTECTED_INSTANCE_ID}`,
+    );
+  }
   await request({
     endpoint: 'instance',
     token,
