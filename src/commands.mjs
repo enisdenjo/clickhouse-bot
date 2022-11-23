@@ -1,5 +1,6 @@
 import os from 'os';
 import * as ch from './clickhouse.mjs';
+import { isTrue } from './utils.mjs';
 
 /**
  * @param {string} url
@@ -66,7 +67,7 @@ export async function getToken(username, password) {
  * @param {string} token
  * @param {string} organizationId
  * @param {string} instanceId
- * @param {boolean=} waitForProvisioned
+ * @param {string=} waitForProvisioned
  */
 export async function createInstanceFromLatestBackup(
   token,
@@ -74,6 +75,8 @@ export async function createInstanceFromLatestBackup(
   instanceId,
   waitForProvisioned,
 ) {
+  const shouldWaitForProvisioned = isTrue(waitForProvisioned);
+
   console.debug('Finding backup to restore');
   const backups = await ch.getBackups({ token, organizationId, instanceId });
 
@@ -101,7 +104,7 @@ export async function createInstanceFromLatestBackup(
     instanceId: restoredInstanceId,
   });
 
-  if (!waitForProvisioned) {
+  if (!shouldWaitForProvisioned) {
     console.debug('Skip waiting for restored instance to be provisioned');
     return restoredInstance;
   }
