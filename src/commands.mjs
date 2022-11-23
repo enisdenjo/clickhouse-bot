@@ -1,6 +1,5 @@
 import os from 'os';
 import * as ch from './clickhouse.mjs';
-import { isTrue } from './utils.mjs';
 
 /**
  * @param {string} url
