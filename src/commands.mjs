@@ -200,6 +200,20 @@ export async function resetInstancePassword(token, organizationId, instanceId) {
   });
 }
 
+/**
+ * @param {string} token
+ * @param {string} organizationId
+ * @param {string} instanceId
+ */
+export async function deleteInstance(token, organizationId, instanceId) {
+  console.debug('Deleting instance');
+  return await ch.deleteInstance({
+    token,
+    organizationId,
+    instanceId,
+  });
+}
+
 async function getRemoteIp() {
   const res = await fetch('http://ifconfig.me/ip');
   if (!res.ok) {
