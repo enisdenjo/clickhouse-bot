@@ -7,7 +7,7 @@
   "packageManager": "yarn@3.3.0",
   "type": "module",
   "main": "src/index.mjs",
-  "bin": "./bin.cjs",
+  "bin": "./src/bin.mjs",
   "files": [
     "src",
     "bin.cjs",
@@ -17,11 +17,9 @@
   "scripts": {
     "type-check": "tsc --noEmit",
     "lint": "prettier -c .",
-    "build": "esbuild src/bin.mjs --bundle --platform=node --target=node18 --outfile=bin.cjs",
     "start": "node src/bin.mjs"
   },
   "devDependencies": {
-    "esbuild": "^0.15.15",
     "prettier": "^2.7.1",
     "typescript": "^4.9.3"
   },
