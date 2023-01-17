@@ -81,21 +81,13 @@ export async function getInstances({ token, organizationId }) {
  * @param {{ token: string, organizationId: string, instanceId: string }} opts
  */
 export async function getInstance({ token, organizationId, instanceId }) {
-  /** @type {{ instance: Instance } | null} */
-  const res = await request({
-    endpoint: 'instance',
-    token,
-    body: {
-      rpcAction: 'updateUserDataFlag', // TODO: is this really the right action? (is in UI)
-      instanceId,
-      organizationId,
-    },
-  });
-  if (!res) {
-    throw new Error('Response containes no body');
+  const instances = await getInstances({ token, organizationId });
+  for (const instance of instances) {
+    if (instance.id === instanceId) {
+      return instance;
+    }
   }
-
-  return res.instance;
+  throw new Error(`Instance with ID ${instanceId} not found`);
 }
 
 /**
