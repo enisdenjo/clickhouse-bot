@@ -93,14 +93,15 @@ export async function waitForInstanceProvisioned(
   instanceId,
   pollTimeoutInMs,
 ) {
-  console.debug('Waiting for instance to be provisioned');
+  console.info('Waiting for instance to be provisioned');
 
   let instance = await ch.getInstance({ token, organizationId, instanceId });
 
   while (instance.state === 'provisioning') {
-    console.debug(`Instance state "${instance.state}"`);
+    console.debug(
+      `Instance state is "${instance.state}", waiting ${pollTimeoutInMs}ms`,
+    );
     await new Promise((resolve) => setTimeout(resolve, pollTimeoutInMs));
-    console.debug('Checking instance state...');
     try {
       instance = await ch.getInstance({ token, organizationId, instanceId });
     } catch (err) {
