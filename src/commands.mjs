@@ -96,7 +96,7 @@ export async function waitForInstanceProvisioned(
   let instance = await ch.getInstance({ token, organizationId, instanceId });
 
   while (instance.state === 'provisioning') {
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await new Promise((resolve) => setTimeout(resolve, 10000));
     console.debug('Checking instance state');
     instance = await ch.getInstance({ token, organizationId, instanceId });
   }
