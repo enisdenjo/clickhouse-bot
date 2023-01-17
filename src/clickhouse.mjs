@@ -61,7 +61,7 @@ export async function getToken(username, password) {
  * @param {{ token: string, organizationId: string }} opts
  */
 export async function getInstances({ token, organizationId }) {
-  /** @type {{ instances: Instance[] } | null} */
+  /** @type {({ instances: Instance[] }) | null} */
   const res = await request({
     endpoint: 'instance',
     token,
@@ -124,7 +124,7 @@ export async function restoreInstancePassword({
       `Cannot reset password on protected instance ${env.CLICKHOUSE_PROTECTED_INSTANCE_ID}`,
     );
   }
-  /** @type {{ password: string } | null} */
+  /** @type {({ password: string }) | null} */
   const res = await request({
     endpoint: 'instance',
     token,
@@ -165,7 +165,7 @@ export async function deleteInstance({ token, organizationId, instanceId }) {
  * @param {{ token: string, organizationId: string, instanceId: string }} opts
  */
 export async function getBackups({ token, organizationId, instanceId }) {
-  /** @type {{ backups: { id: string, createdAt: number }[] } | null} */
+  /** @type {({ backups: { id: string, createdAt: number }[] }) | null} */
   const res = await request({
     endpoint: 'backup',
     token,
@@ -192,7 +192,7 @@ export async function restoreBackup({
   backupId,
   restoredInstanceName,
 }) {
-  /** @type {{ instanceId: string } | null} */
+  /** @type {({ instanceId: string }) | null} */
   const res = await request({
     endpoint: 'backup',
     token,
