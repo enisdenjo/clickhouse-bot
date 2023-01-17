@@ -98,7 +98,16 @@ export async function waitForInstanceProvisioned(
   while (instance.state === 'provisioning') {
     await new Promise((resolve) => setTimeout(resolve, 10000));
     console.debug('Checking instance state');
-    instance = await ch.getInstance({ token, organizationId, instanceId });
+    try {
+      instance = await ch.getInstance({ token, organizationId, instanceId });
+    } catch (err) {
+      if (err instanceof ch.RequestError && err.response.status === 500) {
+        // sometimes the polling errors out randomly with a 500
+        console.warn('Ignoring internal server error');
+      } else {
+        throw err;
+      }
+    }
   }
 }
 /**
