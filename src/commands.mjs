@@ -85,19 +85,22 @@ export async function getToken(username, password) {
  * @param {string} token
  * @param {string} organizationId
  * @param {string} instanceId
+ * @param {number} pollTimeoutInMs
  */
 export async function waitForInstanceProvisioned(
   token,
   organizationId,
   instanceId,
+  pollTimeoutInMs,
 ) {
   console.debug('Waiting for instance to be provisioned');
 
   let instance = await ch.getInstance({ token, organizationId, instanceId });
 
   while (instance.state === 'provisioning') {
-    await new Promise((resolve) => setTimeout(resolve, 10000));
-    console.debug('Checking instance state');
+    console.debug(`Instance state "${instance.state}"`);
+    await new Promise((resolve) => setTimeout(resolve, pollTimeoutInMs));
+    console.debug('Checking instance state...');
     try {
       instance = await ch.getInstance({ token, organizationId, instanceId });
     } catch (err) {
