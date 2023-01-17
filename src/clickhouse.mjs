@@ -267,7 +267,10 @@ async function request({ endpoint, token, body }) {
       statusText: res.statusText,
       response: await res.text(),
     });
-    throw new Error(`Request failed with ${res.status}: ${res.statusText}`);
+    throw new RequestError(
+      `Request failed with ${res.status}: ${res.statusText}`,
+      res,
+    );
   }
   if (!res.headers.get('content-type')?.includes('application/json')) {
     throw new Error('Response content-type is not application/json');
@@ -278,6 +281,18 @@ async function request({ endpoint, token, body }) {
     return null;
   }
   return JSON.parse(resBody);
+}
+
+export class RequestError extends Error {
+  /**
+   * @param {string} message
+   * @param {Response} response
+   */
+  constructor(message, response) {
+    super(message);
+    this.response = response;
+    this.name = 'RequestError';
+  }
 }
 
 /**
