@@ -8,7 +8,7 @@ import { env, isDebug } from './env.mjs';
  */
 export async function getToken(username, password) {
   const browser = await pptr.launch({
-    headless: !isDebug(),
+    headless: !env.PUPPETEER_OPEN_BROWSER,
     devtools: isDebug(),
   });
   const page = await browser.newPage();
