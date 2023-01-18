@@ -115,20 +115,11 @@ export async function waitForInstanceProvisioned(
       `Instance state is "${instance.state}", waiting ${pollTimeoutInMs}ms`,
     );
     await new Promise((resolve) => setTimeout(resolve, pollTimeoutInMs));
-    try {
-      instance = await ch.getInstance({
-        token: await ch.getToken(username, password),
-        organizationId,
-        instanceId,
-      });
-    } catch (err) {
-      if (err instanceof ch.RequestError && err.response.status === 500) {
-        // sometimes the polling errors out randomly with a 500
-        console.warn('Ignoring internal server error');
-      } else {
-        throw err;
-      }
-    }
+    instance = await ch.getInstance({
+      token: await ch.getToken(username, password),
+      organizationId,
+      instanceId,
+    });
   }
 }
 /**
