@@ -82,20 +82,33 @@ export async function getToken(username, password) {
 }
 
 /**
- * @param {string} token
+ * You have to provide the username password auth since
+ * access tokens expire after 10mins and provisioning
+ * can last much longer.
+ *
+ * Having this in mind, each check will re-auth and acquire
+ * a new token. Take care that the poll timeout is not too low.
+ *
+ * @param {string} username
+ * @param {string} password
  * @param {string} organizationId
  * @param {string} instanceId
  * @param {number} pollTimeoutInMs
  */
 export async function waitForInstanceProvisioned(
-  token,
+  username,
+  password,
   organizationId,
   instanceId,
   pollTimeoutInMs,
 ) {
   console.info('Waiting for instance to be provisioned');
 
-  let instance = await ch.getInstance({ token, organizationId, instanceId });
+  let instance = await ch.getInstance({
+    token: await ch.getToken(username, password),
+    organizationId,
+    instanceId,
+  });
 
   while (instance.state === 'provisioning') {
     console.debug(
@@ -103,7 +116,11 @@ export async function waitForInstanceProvisioned(
     );
     await new Promise((resolve) => setTimeout(resolve, pollTimeoutInMs));
     try {
-      instance = await ch.getInstance({ token, organizationId, instanceId });
+      instance = await ch.getInstance({
+        token: await ch.getToken(username, password),
+        organizationId,
+        instanceId,
+      });
     } catch (err) {
       if (err instanceof ch.RequestError && err.response.status === 500) {
         // sometimes the polling errors out randomly with a 500
