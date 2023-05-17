@@ -21,6 +21,7 @@ const client = createClient<Mutable<typeof clickhouseApi>>({
       serviceId: env.serviceId,
     },
   });
+  // TODO: service is not typed (openapi references schema with $ref)
   console.log({ service });
 })().catch((err) => {
   console.error(err);
