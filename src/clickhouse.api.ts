@@ -195,25 +195,26 @@ export default {
           },
         },
       },
-      delete: {
-        summary: 'Delete service.',
-        description:
-          'Deletes the service. The service must be in stopped state and is deleted asynchronously after this method call.',
-        parameters: [
-          {
-            in: 'path',
-            name: 'Organization ID',
-            description: 'ID of the organization that owns the service.',
-            schema: { type: 'string', format: 'uuid' },
-          },
-          {
-            in: 'path',
-            name: 'Service ID',
-            description: 'ID of the service to delete.',
-            schema: { type: 'string', format: 'uuid' },
-          },
-        ],
-      },
+      // TODO: fix
+      // delete: {
+      //   summary: 'Delete service.',
+      //   description:
+      //     'Deletes the service. The service must be in stopped state and is deleted asynchronously after this method call.',
+      //   parameters: [
+      //     {
+      //       in: 'path',
+      //       name: 'Organization ID',
+      //       description: 'ID of the organization that owns the service.',
+      //       schema: { type: 'string', format: 'uuid' },
+      //     },
+      //     {
+      //       in: 'path',
+      //       name: 'Service ID',
+      //       description: 'ID of the service to delete.',
+      //       schema: { type: 'string', format: 'uuid' },
+      //     },
+      //   ],
+      // },
     },
     '/v1/organizations/:organizationId/services/:serviceId/state': {
       patch: {
@@ -516,25 +517,26 @@ export default {
           },
         },
       },
-      delete: {
-        summary: 'Delete key',
-        description:
-          'Deletes API key. Only a key not used to authenticate the active request can be deleted.',
-        parameters: [
-          {
-            in: 'path',
-            name: 'Organization ID',
-            description: 'ID of the organization that owns the key.',
-            schema: { type: 'string', format: 'uuid' },
-          },
-          {
-            in: 'path',
-            name: 'API key ID',
-            description: 'ID of the key to delete.',
-            schema: { type: 'string', format: 'uuid' },
-          },
-        ],
-      },
+      // TODO: fix
+      // delete: {
+      //   summary: 'Delete key',
+      //   description:
+      //     'Deletes API key. Only a key not used to authenticate the active request can be deleted.',
+      //   parameters: [
+      //     {
+      //       in: 'path',
+      //       name: 'Organization ID',
+      //       description: 'ID of the organization that owns the key.',
+      //       schema: { type: 'string', format: 'uuid' },
+      //     },
+      //     {
+      //       in: 'path',
+      //       name: 'API key ID',
+      //       description: 'ID of the key to delete.',
+      //       schema: { type: 'string', format: 'uuid' },
+      //     },
+      //   ],
+      // },
     },
     '/v1/organizations/:organizationId/members': {
       get: {
@@ -624,24 +626,25 @@ export default {
           },
         },
       },
-      delete: {
-        summary: 'Remove an organization member',
-        description: 'Removes a user from the organization',
-        parameters: [
-          {
-            in: 'path',
-            name: 'Organization ID',
-            description: 'ID of the requested organization.',
-            schema: { type: 'string', format: 'uuid' },
-          },
-          {
-            in: 'path',
-            name: 'User ID',
-            description: 'ID of the requested user.',
-            schema: { type: 'string', format: 'uuid' },
-          },
-        ],
-      },
+      // TODO: fix
+      // delete: {
+      //   summary: 'Remove an organization member',
+      //   description: 'Removes a user from the organization',
+      //   parameters: [
+      //     {
+      //       in: 'path',
+      //       name: 'Organization ID',
+      //       description: 'ID of the requested organization.',
+      //       schema: { type: 'string', format: 'uuid' },
+      //     },
+      //     {
+      //       in: 'path',
+      //       name: 'User ID',
+      //       description: 'ID of the requested user.',
+      //       schema: { type: 'string', format: 'uuid' },
+      //     },
+      //   ],
+      // },
     },
     '/v1/organizations/:organizationId/invitations': {
       get: {
@@ -725,24 +728,25 @@ export default {
           },
         },
       },
-      delete: {
-        summary: 'Delete organization invitation',
-        description: 'Deletes a single organization invitation.',
-        parameters: [
-          {
-            in: 'path',
-            name: 'Organization ID',
-            description: 'ID of the organization that has the invitation.',
-            schema: { type: 'string', format: 'uuid' },
-          },
-          {
-            in: 'path',
-            name: 'Organization invitation ID',
-            description: 'ID of the requested organization.',
-            schema: { type: 'string', format: 'uuid' },
-          },
-        ],
-      },
+      // TODO: fix
+      // delete: {
+      //   summary: 'Delete organization invitation',
+      //   description: 'Deletes a single organization invitation.',
+      //   parameters: [
+      //     {
+      //       in: 'path',
+      //       name: 'Organization ID',
+      //       description: 'ID of the organization that has the invitation.',
+      //       schema: { type: 'string', format: 'uuid' },
+      //     },
+      //     {
+      //       in: 'path',
+      //       name: 'Organization invitation ID',
+      //       description: 'ID of the requested organization.',
+      //       schema: { type: 'string', format: 'uuid' },
+      //     },
+      //   ],
+      // },
     },
     '/v1/organizations/:organizationId/activities': {
       get: {
