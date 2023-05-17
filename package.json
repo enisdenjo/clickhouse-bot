@@ -7,24 +7,22 @@
   },
   "packageManager": "yarn@3.3.0",
   "type": "module",
-  "main": "src/index.mjs",
-  "bin": "./src/bin.mjs",
+  "main": "dist/index.js",
   "files": [
-    "src",
+    "dist",
     "LICENSE.md",
     "README.md"
   ],
   "scripts": {
     "type-check": "tsc --noEmit",
     "lint": "prettier -c .",
-    "start": "node src/bin.mjs"
+    "build": "tsc -b"
   },
   "devDependencies": {
     "prettier": "^2.7.1",
     "typescript": "^4.9.3"
   },
   "dependencies": {
-    "puppeteer": "^19.2.2",
-    "yaml": "^2.1.3"
+    "fets": "^0.1.5"
   }
 }
