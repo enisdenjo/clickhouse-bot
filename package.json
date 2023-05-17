@@ -3,7 +3,7 @@
   "name": "clickhouse-bot",
   "version": "0.0.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "packageManager": "yarn@3.3.0",
   "type": "module",
@@ -19,6 +19,7 @@
     "build": "tsc -b"
   },
   "devDependencies": {
+    "@types/node": "^20.1.7",
     "prettier": "^2.7.1",
     "typescript": "^4.9.3"
   },
