@@ -3,6 +3,59 @@ export default {
   info: { title: 'OpenAPI spec for ClickHouse Cloud', version: '1.0' },
   servers: [{ url: 'https://api.clickhouse.cloud' }],
   paths: {
+    '/v1/organizations': {
+      get: {
+        summary: 'Get list of available organizations',
+        description:
+          'Returns a list with a single organization associated with the API key in the request.',
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Successful response',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    result: {
+                      type: 'array',
+                      items: { $ref: '#/components/schemas/Organization' },
+                    },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     '/v1/organizations/:organizationId': {
       get: {
         summary: 'Get organization details',
@@ -21,7 +74,39 @@ export default {
             description: 'Successful response',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/Organization' },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    result: { $ref: '#/components/schemas/Organization' },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
+                },
               },
             },
           },
@@ -51,25 +136,39 @@ export default {
             description: 'Successful response',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/Organization' },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    result: { $ref: '#/components/schemas/Organization' },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
               },
             },
           },
-        },
-      },
-    },
-    '/v1/organizations': {
-      get: {
-        summary: 'Get list of available organizations',
-        description:
-          'Returns a list with a single organization associated with the API key in the request.',
-        parameters: [],
-        responses: {
-          '200': {
-            description: 'Successful response',
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/Organization' },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
+                },
               },
             },
           },
@@ -93,7 +192,42 @@ export default {
             description: 'Successful response',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/Service' },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    result: {
+                      type: 'array',
+                      items: { $ref: '#/components/schemas/Service' },
+                    },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
+                },
               },
             },
           },
@@ -123,7 +257,41 @@ export default {
             description: 'Successful response',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/ServicePostResponse' },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    result: {
+                      $ref: '#/components/schemas/ServicePostResponse',
+                    },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
+                },
               },
             },
           },
@@ -153,7 +321,39 @@ export default {
             description: 'Successful response',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/Service' },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    result: { $ref: '#/components/schemas/Service' },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
+                },
               },
             },
           },
@@ -189,32 +389,63 @@ export default {
             description: 'Successful response',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/Service' },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    result: { $ref: '#/components/schemas/Service' },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
+                },
               },
             },
           },
         },
       },
-      // TODO: fix
-      // delete: {
-      //   summary: 'Delete service.',
-      //   description:
-      //     'Deletes the service. The service must be in stopped state and is deleted asynchronously after this method call.',
-      //   parameters: [
-      //     {
-      //       in: 'path',
-      //       name: 'Organization ID',
-      //       description: 'ID of the organization that owns the service.',
-      //       schema: { type: 'string', format: 'uuid' },
-      //     },
-      //     {
-      //       in: 'path',
-      //       name: 'Service ID',
-      //       description: 'ID of the service to delete.',
-      //       schema: { type: 'string', format: 'uuid' },
-      //     },
-      //   ],
-      // },
+      delete: {
+        summary: 'Delete service.',
+        description:
+          'Deletes the service. The service must be in stopped state and is deleted asynchronously after this method call.',
+        parameters: [
+          {
+            in: 'path',
+            name: 'Organization ID',
+            description: 'ID of the organization that owns the service.',
+            schema: { type: 'string', format: 'uuid' },
+          },
+          {
+            in: 'path',
+            name: 'Service ID',
+            description: 'ID of the service to delete.',
+            schema: { type: 'string', format: 'uuid' },
+          },
+        ],
+      },
     },
     '/v1/organizations/:organizationId/services/:serviceId/state': {
       patch: {
@@ -246,7 +477,39 @@ export default {
             description: 'Successful response',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/Service' },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    result: { $ref: '#/components/schemas/Service' },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
+                },
               },
             },
           },
@@ -286,7 +549,39 @@ export default {
             description: 'Successful response',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/Service' },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    result: { $ref: '#/components/schemas/Service' },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
+                },
               },
             },
           },
@@ -326,7 +621,39 @@ export default {
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/ServicePasswordPatchResponse',
+                  type: 'object',
+                  properties: {
+                    result: {
+                      $ref: '#/components/schemas/ServicePasswordPatchResponse',
+                    },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
                 },
               },
             },
@@ -357,7 +684,42 @@ export default {
             description: 'Successful response',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/Backup' },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    result: {
+                      type: 'array',
+                      items: { $ref: '#/components/schemas/Backup' },
+                    },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
+                },
               },
             },
           },
@@ -393,7 +755,39 @@ export default {
             description: 'Successful response',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/Backup' },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    result: { $ref: '#/components/schemas/Backup' },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
+                },
               },
             },
           },
@@ -417,7 +811,42 @@ export default {
             description: 'Successful response',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/ApiKey' },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    result: {
+                      type: 'array',
+                      items: { $ref: '#/components/schemas/ApiKey' },
+                    },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
+                },
               },
             },
           },
@@ -446,7 +875,39 @@ export default {
             description: 'Successful response',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/ApiKeyPostResponse' },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    result: { $ref: '#/components/schemas/ApiKeyPostResponse' },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
+                },
               },
             },
           },
@@ -476,7 +937,39 @@ export default {
             description: 'Successful response',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/ApiKey' },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    result: { $ref: '#/components/schemas/ApiKey' },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
+                },
               },
             },
           },
@@ -511,32 +1004,63 @@ export default {
             description: 'Successful response',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/ApiKey' },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    result: { $ref: '#/components/schemas/ApiKey' },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
+                },
               },
             },
           },
         },
       },
-      // TODO: fix
-      // delete: {
-      //   summary: 'Delete key',
-      //   description:
-      //     'Deletes API key. Only a key not used to authenticate the active request can be deleted.',
-      //   parameters: [
-      //     {
-      //       in: 'path',
-      //       name: 'Organization ID',
-      //       description: 'ID of the organization that owns the key.',
-      //       schema: { type: 'string', format: 'uuid' },
-      //     },
-      //     {
-      //       in: 'path',
-      //       name: 'API key ID',
-      //       description: 'ID of the key to delete.',
-      //       schema: { type: 'string', format: 'uuid' },
-      //     },
-      //   ],
-      // },
+      delete: {
+        summary: 'Delete key',
+        description:
+          'Deletes API key. Only a key not used to authenticate the active request can be deleted.',
+        parameters: [
+          {
+            in: 'path',
+            name: 'Organization ID',
+            description: 'ID of the organization that owns the key.',
+            schema: { type: 'string', format: 'uuid' },
+          },
+          {
+            in: 'path',
+            name: 'API key ID',
+            description: 'ID of the key to delete.',
+            schema: { type: 'string', format: 'uuid' },
+          },
+        ],
+      },
     },
     '/v1/organizations/:organizationId/members': {
       get: {
@@ -555,7 +1079,42 @@ export default {
             description: 'Successful response',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/Member' },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    result: {
+                      type: 'array',
+                      items: { $ref: '#/components/schemas/Member' },
+                    },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
+                },
               },
             },
           },
@@ -585,7 +1144,39 @@ export default {
             description: 'Successful response',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/Member' },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    result: { $ref: '#/components/schemas/Member' },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
+                },
               },
             },
           },
@@ -620,31 +1211,62 @@ export default {
             description: 'Successful response',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/Member' },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    result: { $ref: '#/components/schemas/Member' },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
+                },
               },
             },
           },
         },
       },
-      // TODO: fix
-      // delete: {
-      //   summary: 'Remove an organization member',
-      //   description: 'Removes a user from the organization',
-      //   parameters: [
-      //     {
-      //       in: 'path',
-      //       name: 'Organization ID',
-      //       description: 'ID of the requested organization.',
-      //       schema: { type: 'string', format: 'uuid' },
-      //     },
-      //     {
-      //       in: 'path',
-      //       name: 'User ID',
-      //       description: 'ID of the requested user.',
-      //       schema: { type: 'string', format: 'uuid' },
-      //     },
-      //   ],
-      // },
+      delete: {
+        summary: 'Remove an organization member',
+        description: 'Removes a user from the organization',
+        parameters: [
+          {
+            in: 'path',
+            name: 'Organization ID',
+            description: 'ID of the requested organization.',
+            schema: { type: 'string', format: 'uuid' },
+          },
+          {
+            in: 'path',
+            name: 'User ID',
+            description: 'ID of the requested user.',
+            schema: { type: 'string', format: 'uuid' },
+          },
+        ],
+      },
     },
     '/v1/organizations/:organizationId/invitations': {
       get: {
@@ -663,7 +1285,42 @@ export default {
             description: 'Successful response',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/Invitation' },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    result: {
+                      type: 'array',
+                      items: { $ref: '#/components/schemas/Invitation' },
+                    },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
+                },
               },
             },
           },
@@ -692,7 +1349,39 @@ export default {
             description: 'Successful response',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/Invitation' },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    result: { $ref: '#/components/schemas/Invitation' },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
+                },
               },
             },
           },
@@ -722,31 +1411,62 @@ export default {
             description: 'Successful response',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/Invitation' },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    result: { $ref: '#/components/schemas/Invitation' },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
+                },
               },
             },
           },
         },
       },
-      // TODO: fix
-      // delete: {
-      //   summary: 'Delete organization invitation',
-      //   description: 'Deletes a single organization invitation.',
-      //   parameters: [
-      //     {
-      //       in: 'path',
-      //       name: 'Organization ID',
-      //       description: 'ID of the organization that has the invitation.',
-      //       schema: { type: 'string', format: 'uuid' },
-      //     },
-      //     {
-      //       in: 'path',
-      //       name: 'Organization invitation ID',
-      //       description: 'ID of the requested organization.',
-      //       schema: { type: 'string', format: 'uuid' },
-      //     },
-      //   ],
-      // },
+      delete: {
+        summary: 'Delete organization invitation',
+        description: 'Deletes a single organization invitation.',
+        parameters: [
+          {
+            in: 'path',
+            name: 'Organization ID',
+            description: 'ID of the organization that has the invitation.',
+            schema: { type: 'string', format: 'uuid' },
+          },
+          {
+            in: 'path',
+            name: 'Organization invitation ID',
+            description: 'ID of the requested organization.',
+            schema: { type: 'string', format: 'uuid' },
+          },
+        ],
+      },
     },
     '/v1/organizations/:organizationId/activities': {
       get: {
@@ -765,7 +1485,42 @@ export default {
             description: 'Successful response',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/Activity' },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    result: {
+                      type: 'array',
+                      items: { $ref: '#/components/schemas/Activity' },
+                    },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
+                },
               },
             },
           },
@@ -795,7 +1550,39 @@ export default {
             description: 'Successful response',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/Activity' },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    result: { $ref: '#/components/schemas/Activity' },
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 200,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description:
+              'The server cannot or will not process the request due to something that is perceived to be a client error.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: {
+                      type: 'number',
+                      description: 'HTTP status code.',
+                      example: 400,
+                    },
+                    error: {
+                      type: 'string',
+                      description: 'Detailed error description.',
+                    },
+                  },
+                },
               },
             },
           },
@@ -879,8 +1666,14 @@ export default {
           tier: {
             type: 'string',
             description:
-              "Tier of the service: 'development', 'production'. Production services scale, Development are fixed size.",
-            enum: ['development', 'production'],
+              "Tier of the service: 'development', 'production', 'dedicated_high_mem', 'dedicated_high_cpu', 'dedicated_standard'. Production services scale, Development are fixed size.",
+            enum: [
+              'development',
+              'production',
+              'dedicated_high_mem',
+              'dedicated_high_cpu',
+              'dedicated_standard',
+            ],
           },
           minTotalMemoryGb: {
             type: 'number',
@@ -940,7 +1733,7 @@ export default {
       },
       Activity: {
         properties: {
-          id: { type: 'string', description: 'Unique activity id.' },
+          id: { type: 'string', description: 'Unique activity ID.' },
           createdAt: {
             type: 'string',
             description: 'Timestamp of the activity. ISO-8601.',
@@ -978,7 +1771,7 @@ export default {
               "Type of the actor: 'user', 'support', 'system', 'api'.",
             enum: ['user', 'support', 'system', 'api'],
           },
-          actorId: { type: 'string', description: 'Unique actor id.' },
+          actorId: { type: 'string', description: 'Unique actor ID.' },
           actorDetails: {
             type: 'string',
             description: 'Additional information about the actor.',
@@ -991,12 +1784,12 @@ export default {
           organizationId: {
             type: 'string',
             description:
-              'Scope of the activity: organization id this activity is related to.',
+              'Scope of the activity: organization ID this activity is related to.',
           },
           serviceId: {
             type: 'string',
             description:
-              'Scope of the activity: service id this activity is related to.',
+              'Scope of the activity: service ID this activity is related to.',
           },
         },
       },
@@ -1146,11 +1939,11 @@ export default {
       },
       ApiKeyHashData: {
         properties: {
-          keyIdHash: { type: 'string', description: 'Hash of the key id. ' },
+          keyIdHash: { type: 'string', description: 'Hash of the key ID. ' },
           keyIdSuffix: {
             type: 'string',
             description:
-              "Last 4 digits of the key id. Algorithm: sha256sum | tr -d '-' | xxd -r -p | base64",
+              "Last 4 digits of the key ID. Algorithm: sha256sum | tr -d '-' | xxd -r -p | base64",
           },
           keySecretHash: {
             type: 'string',
@@ -1192,8 +1985,14 @@ export default {
           tier: {
             type: 'string',
             description:
-              "Tier of the service: 'development', 'production'. Production services scale, Development are fixed size.",
-            enum: ['development', 'production'],
+              "Tier of the service: 'development', 'production', 'dedicated_high_mem', 'dedicated_high_cpu', 'dedicated_standard'. Production services scale, Development are fixed size.",
+            enum: [
+              'development',
+              'production',
+              'dedicated_high_mem',
+              'dedicated_high_cpu',
+              'dedicated_standard',
+            ],
           },
           ipAccessList: {
             type: 'array',
@@ -1340,7 +2139,7 @@ export default {
           keyId: {
             type: 'string',
             description:
-              "Generated key id. Provided only if there was no 'hashData' in the request.",
+              "Generated key ID. Provided only if there was no 'hashData' in the request.",
           },
           keySecret: {
             type: 'string',
