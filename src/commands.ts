@@ -139,7 +139,86 @@ export async function waitForInstanceProvisioned(
 export async function whitelistMyIpInInstance(
   organizationId: string,
   instanceId: string,
-) {}
+) {
+  const ip = await getRemoteIp();
+  const description = `[clickhouse-bot] ${os.hostname()}`;
+  console.debug('Whitelisting IP', { ip, description });
+
+  const res = await client[
+    '/v1/organizations/:organizationId/services/:serviceId'
+  ].patch({
+    // @ts-expect-error headers is still allowed
+    headers,
+    // TODO: params not typed but are there
+    params: {
+      organizationId,
+      serviceId: instanceId,
+    },
+    json: {
+      ipAccessList: {
+        add: [
+          {
+            source: ip,
+            description,
+          },
+        ],
+      },
+    },
+  });
+
+  const body = await res.json();
+  if ('error' in body) {
+    throw new Error(String(body.error));
+  }
+  if (!('result' in body)) {
+    throw new Error('Result not present in the response body');
+  }
+
+  // TODO: not typed because openapi schema uses $ref
+  return body.result as Instance;
+}
+
+export async function removeMyIpFromWhitelistInInstance(
+  organizationId: string,
+  instanceId: string,
+) {
+  const ip = await getRemoteIp();
+  const description = `[clickhouse-bot] ${os.hostname()}`;
+  console.debug('Removing whitelisted IP', { ip, description });
+
+  const res = await client[
+    '/v1/organizations/:organizationId/services/:serviceId'
+  ].patch({
+    // @ts-expect-error headers is still allowed
+    headers,
+    // TODO: params not typed but are there
+    params: {
+      organizationId,
+      serviceId: instanceId,
+    },
+    json: {
+      ipAccessList: {
+        remove: [
+          {
+            source: ip,
+            description,
+          },
+        ],
+      },
+    },
+  });
+
+  const body = await res.json();
+  if ('error' in body) {
+    throw new Error(String(body.error));
+  }
+  if (!('result' in body)) {
+    throw new Error('Result not present in the response body');
+  }
+
+  // TODO: not typed because openapi schema uses $ref
+  return body.result as Instance;
+}
 
 // clickhouseApi@components/schemas/Backup
 interface Backup {
