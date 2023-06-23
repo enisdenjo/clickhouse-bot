@@ -79,6 +79,91 @@ export async function getInstance(organizationId: string, instanceId: string) {
   return body.result as Instance;
 }
 
+export async function updateInstanceState(
+  organizationId: string,
+  instanceId: string,
+  state: 'start' | 'stop',
+) {
+  if (env.CLICKHOUSE_PROTECTED_INSTANCE_ID === instanceId) {
+    throw new Error(
+      `Cannot update state of protected instance ${env.CLICKHOUSE_PROTECTED_INSTANCE_ID}`,
+    );
+  }
+
+  console.debug(`Updating instance state to ${state}`);
+  const res = await client[
+    '/v1/organizations/:organizationId/services/:serviceId/state'
+  ].patch({
+    // @ts-expect-error headers is still allowed
+    headers,
+    // TODO: params not typed but are there
+    params: {
+      organizationId,
+      serviceId: instanceId,
+    },
+    json: {
+      command: state,
+    },
+  });
+
+  const body = await res.json();
+  if ('error' in body) {
+    throw new Error(String(body.error));
+  }
+  if (!('result' in body)) {
+    throw new Error('Result not present in the response body');
+  }
+
+  // TODO: not typed because openapi schema uses $ref
+  return body.result as Instance;
+}
+
+export async function stopAndDeleteInstance(
+  organizationId: string,
+  instanceId: string,
+) {
+  if (env.CLICKHOUSE_PROTECTED_INSTANCE_ID === instanceId) {
+    throw new Error(
+      `Cannot delete protected instance ${env.CLICKHOUSE_PROTECTED_INSTANCE_ID}`,
+    );
+  }
+
+  const instance = await getInstance(organizationId, instanceId);
+  if (instance.state === 'stopped') {
+    console.debug('Instance is already stopped');
+  } else {
+    await updateInstanceState(organizationId, instanceId, 'stop');
+    await waitForInstanceState(organizationId, instanceId, 5_000, 'stopped');
+  }
+
+  console.debug('Deleting instance');
+  const res = await client[
+    '/v1/organizations/:organizationId/services/:serviceId'
+  ].delete({
+    headers,
+    params: {
+      // @ts-expect-error TODO: openapi schema uses "Organizaiton ID" and "Service ID" names
+      organizationId,
+      serviceId: instanceId,
+    },
+  });
+
+  // @ts-expect-error res is unknown
+  if (!res.ok) {
+    throw new Error(
+      `Delete instance request failed with ${
+        // @ts-expect-error res is unknown
+        res.status
+      }: ${
+        // @ts-expect-error res is unknown
+        res.statusText
+      }`,
+    );
+  }
+
+  return 'Ok';
+}
+
 export async function createInstanceFromLatestBackup(
   organizationId: string,
   instanceId: string,
@@ -118,16 +203,17 @@ export async function createInstanceFromLatestBackup(
   return restored;
 }
 
-export async function waitForInstanceProvisioned(
+export async function waitForInstanceState(
   organizationId: string,
   instanceId: string,
   pollTimeoutInMs: number,
+  state: Instance['state'],
 ) {
   console.debug('Waiting for instance to be provisioned');
 
   let instance = await getInstance(organizationId, instanceId);
 
-  while (instance.state === 'provisioning') {
+  while (instance.state === state) {
     console.debug(
       `Instance state is "${instance.state}", waiting ${pollTimeoutInMs}ms`,
     );
