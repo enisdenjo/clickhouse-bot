@@ -116,6 +116,31 @@ export async function createInstanceFromLatestBackup(
   return restored;
 }
 
+export async function waitForInstanceProvisioned(
+  organizationId: string,
+  instanceId: string,
+  pollTimeoutInMs: number,
+) {
+  console.debug('Waiting for instance to be provisioned');
+
+  let instance = await getInstance(organizationId, instanceId);
+
+  while (instance.state === 'provisioning') {
+    console.debug(
+      `Instance state is "${instance.state}", waiting ${pollTimeoutInMs}ms`,
+    );
+    await new Promise((resolve) => setTimeout(resolve, pollTimeoutInMs));
+    instance = await getInstance(organizationId, instanceId);
+  }
+
+  return 'Ok';
+}
+
+export async function whitelistMyIpInInstance(
+  organizationId: string,
+  instanceId: string,
+) {}
+
 // clickhouseApi@components/schemas/Backup
 interface Backup {
   id: string;
