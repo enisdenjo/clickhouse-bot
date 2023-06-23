@@ -31,8 +31,8 @@ jobs:
       - name: Check
         run: yarn check:${{ matrix.check }}
 
-  check-build:
-    name: Check build
+  build-integrity:
+    name: Build integrity
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -50,4 +50,4 @@ jobs:
         run: |
           [ -z "$(git status --porcelain)" ] \
             && echo "::notice::Build is up-to-date." \
-            || echo "::error::Build is out-of-sync. Please run `yarn build` and push the changes."
+            || (echo '::error::Build is out-of-sync. Please run "yarn build" and push the changes.' && exit 1)
