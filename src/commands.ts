@@ -1,6 +1,8 @@
 import os from 'node:os';
-import clickhouseApi from './clickhouse.api';
+import YAML from 'yaml';
+import fs from 'node:fs/promises';
 import { createClient, Mutable } from 'fets';
+import clickhouseApi from './clickhouse.api';
 import { env } from './env';
 
 const client = createClient<Mutable<typeof clickhouseApi>>({
@@ -220,6 +222,57 @@ export async function removeMyIpFromWhitelistInInstance(
   return body.result as Instance;
 }
 
+export async function compareTestQueries(
+  queriesFile: string,
+  url0: string,
+  username0: string,
+  password0: string,
+  url1: string,
+  username1: string,
+  password1: string,
+) {
+  console.debug('Comparing test queries between two databases', { url0, url1 });
+
+  const queries = await parseFile(queriesFile);
+
+  const [res0, res1] = await Promise.all([
+    execQueries({
+      url: url0,
+      username: username0,
+      password: password0,
+      queries,
+    }),
+    execQueries({
+      url: url1,
+      username: username1,
+      password: password1,
+      queries,
+    }),
+  ]);
+
+  for (const [key, val0] of Object.entries(res0)) {
+    const val1 = res1[key];
+    if (val0 !== val1) {
+      throw new Error(
+        `Value for "${key}" is not the same, url0 "${val0}" vs url1 "${val1}"`,
+      );
+    }
+  }
+
+  return 'Ok';
+}
+
+export async function runTestQueries(
+  queriesFile: string,
+  url: string,
+  username: string,
+  password: string,
+) {
+  const queries = await parseFile(queriesFile);
+  console.debug('Running test queries', { queries });
+  return await execQueries({ queries, url, username, password });
+}
+
 // clickhouseApi@components/schemas/Backup
 interface Backup {
   id: string;
@@ -301,4 +354,71 @@ async function getRemoteIp() {
     );
   }
   return res.text();
+}
+
+async function execQueries({
+  queries,
+  ...opts
+}: {
+  url: string;
+  username: string;
+  password: string;
+  queries: Record<string, string>;
+}): Promise<Record<string, string>> {
+  const execdQueries = await Promise.all(
+    Object.values(queries).map((query) => execQuery({ ...opts, query })),
+  );
+  return Object.keys(queries).reduce((acc, name, index) => {
+    return {
+      ...acc,
+      [name]: execdQueries[index],
+    };
+  }, {});
+}
+
+async function execQuery({
+  url,
+  username,
+  password,
+  query,
+}: {
+  url: string;
+  username: string;
+  password: string;
+  query: string;
+}) {
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      authorization:
+        'Basic ' + Buffer.from(`${username}:${password}`).toString('base64'),
+      'content-type': 'text/plain',
+    },
+    body: query,
+  });
+
+  if (!res.ok) {
+    console.debug('Query failed', {
+      url,
+      body: query,
+      status: res.status,
+      statusText: res.statusText,
+      response: await res.text(),
+    });
+    throw new Error(`Query failed with ${res.status}: ${res.statusText}`);
+  }
+
+  return (await res.text()).trim();
+}
+
+async function parseFile(path: string) {
+  if (path.endsWith('.yaml') || path.endsWith('.yml')) {
+    const content = await fs.readFile(path);
+    return YAML.parse(content.toString());
+  } else if (path.endsWith('.json')) {
+    const content = await fs.readFile(path);
+    return JSON.parse(content.toString());
+  } else {
+    throw new Error('Unsupported file, try YAML or JSON');
+  }
 }
