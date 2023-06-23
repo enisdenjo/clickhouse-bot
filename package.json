@@ -18,12 +18,13 @@
     "check:type": "tsc --noEmit",
     "check:format": "prettier -c .",
     "check:build": "prettier -c .",
-    "build": "tsc -b --clean && tsc -b",
+    "build": "rimraf dist && tsc -b",
     "start": "tsx src/bin.ts"
   },
   "devDependencies": {
     "@types/node": "^20.1.7",
     "prettier": "^2.8.8",
+    "rimraf": "^5.0.1",
     "tsx": "^3.12.7",
     "typescript": "^5.1.3"
   },
