@@ -15,8 +15,9 @@
     "README.md"
   ],
   "scripts": {
-    "type-check": "tsc --noEmit",
-    "lint": "prettier -c .",
+    "check:type": "tsc --noEmit",
+    "check:format": "prettier -c .",
+    "check:build": "prettier -c .",
     "build": "tsc -b",
     "start": "tsx src/bin.ts"
   },
