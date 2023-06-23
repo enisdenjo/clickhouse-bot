@@ -18,7 +18,7 @@
     "check:type": "tsc --noEmit",
     "check:format": "prettier -c .",
     "check:build": "prettier -c .",
-    "build": "tsc -b",
+    "build": "tsc -b --clean && tsc -b",
     "start": "tsx src/bin.ts"
   },
   "devDependencies": {
