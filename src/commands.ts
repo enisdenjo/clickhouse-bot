@@ -61,7 +61,6 @@ export async function getInstance(organizationId: string, instanceId: string) {
   ].get({
     headers,
     params: {
-      // @ts-expect-error TODO: wrongly inferred names "Organizaiton ID" and "Service ID"
       organizationId,
       serviceId: instanceId,
     },
@@ -94,7 +93,6 @@ export async function updateInstanceState(
   const res = await client[
     '/v1/organizations/:organizationId/services/:serviceId/state'
   ].patch({
-    // @ts-expect-error headers is still allowed
     headers,
     // TODO: params not typed but are there
     params: {
@@ -142,7 +140,6 @@ export async function stopAndDeleteInstance(
   ].delete({
     headers,
     params: {
-      // @ts-expect-error TODO: openapi schema uses "Organizaiton ID" and "Service ID" names
       organizationId,
       serviceId: instanceId,
     },
@@ -235,7 +232,6 @@ export async function whitelistMyIpInInstance(
   const res = await client[
     '/v1/organizations/:organizationId/services/:serviceId'
   ].patch({
-    // @ts-expect-error headers is still allowed
     headers,
     // TODO: params not typed but are there
     params: {
@@ -277,7 +273,6 @@ export async function removeMyIpFromWhitelistInInstance(
   const res = await client[
     '/v1/organizations/:organizationId/services/:serviceId'
   ].patch({
-    // @ts-expect-error headers is still allowed
     headers,
     // TODO: params not typed but are there
     params: {
@@ -372,7 +367,6 @@ async function getBackups(organizationId: string, instanceId: string) {
   ].get({
     headers,
     params: {
-      // @ts-expect-error TODO: openapi schema uses "Organizaiton ID" and "Service ID" names
       organizationId,
       serviceId: instanceId,
     },
@@ -406,7 +400,6 @@ async function restoreBackup({
   tier: Instance['tier'];
 }) {
   const res = await client['/v1/organizations/:organizationId/services'].post({
-    // @ts-expect-error headers is still allowed
     headers,
     // TODO: params not typed but are there
     params: {
