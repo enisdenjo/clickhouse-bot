@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check:
+    strategy:
+      fail-fast: false
+      matrix:
+        check:
+          - format
+          - type
+    name: Check ${{ matrix.check }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: yarn
+      - name: Install
+        run: yarn install --immutable
+      - name: Check
+        run: yarn check:${{ matrix.check }}
+
+  build-integrity:
+    name: Build integrity
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: yarn
+      - name: Install
+        run: yarn install --immutable
+      - name: Build
+        run: yarn build
+      - name: Check
+        run: |
+          [ -z "$(git status --porcelain)" ] \
+            && echo "::notice::Build is up-to-date." \
+            || (echo '::error::Build is out-of-sync. Please run "yarn build" and push the changes.' && exit 1)

@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "rootDir": "./src",
+    "outDir": "./dist",
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
@@ -8,6 +9,6 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "checkJs": true
+    "skipLibCheck": true // TODO: fix feTS conflicting defs with whatwg-node
   }
 }
